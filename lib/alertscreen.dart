@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+ 
 class InventoryItem {
   final String name;
   final String category;
@@ -17,51 +17,67 @@ class InventoryItem {
  
   bool get isLowStock => quantity <= threshold;
 }
-
+ 
 class AlertScreen extends StatefulWidget {
   const AlertScreen({super.key});
-
+ 
   @override
   State<AlertScreen> createState() => _AlertScreenState();
 }
-
+ 
 class _AlertScreenState extends State<AlertScreen> {
-  
-  // 1 - Hardcoded list for now. In final app replaced with a Firestore query (Topic 6) filtered where quantity <= threshold.
-  //     Firestore query (Topic 6) filtered where quantity <= threshold.
-  final List<InventoryItem> _lowStockItems = [
+  // 1 - This is now your FULL inventory (not just the low stock ones).
+  //     Later this gets replaced with a Firestore query (Topic 6) that
+  //     pulls every item, and you'd do the same .where() filter below
+  //     (or filter it directly in the Firestore query).
+  final List<InventoryItem> _allItems = [
     InventoryItem(
       name: "Logitech Keyboard",
       category: "Electronics",
-      quantity: 3,
+      quantity: 10,
       threshold: 5,
-      icon: Icons.keyboard, //missing icon, but using keyboard as placeholder
+      icon: Icons.keyboard,
     ),
     InventoryItem(
       name: "Detergent Powder",
       category: "Cleaning",
       quantity: 2,
       threshold: 5,
-      icon: Icons.local_laundry_service, //missing icon, but using laundry service as placeholder
+      icon: Icons.local_laundry_service,
     ),
     InventoryItem(
       name: "USB Cable",
       category: "Electronics",
       quantity: 1,
       threshold: 10,
-      icon: Icons.cable, //missing icon, but using cable as placeholder
+      icon: Icons.cable,
     ),
     InventoryItem(
       name: "Permanent Marker",
       category: "Stationery",
       quantity: 2,
       threshold: 10,
-      icon: Icons.edit, //missing icon, but using edit as placeholder
+      icon: Icons.edit,
+    ),
+    // 2 - Example item that's NOT low stock, to prove the filter works.
+    //     This one should NOT show up on the Alerts screen.
+    InventoryItem(
+      name: "Printer Paper",
+      category: "Stationery",
+      quantity: 50,
+      threshold: 10,
+      icon: Icons.description,
     ),
   ];
-
+ 
   @override
   Widget build(BuildContext context) {
+    // 3 - Filter down to only the items that are below/at their threshold.
+    //     .where() checks isLowStock for every item, .toList() turns the
+    //     result back into a List<InventoryItem> that ListView can use.
+    final List<InventoryItem> lowStockItems =
+        _allItems.where((item) => item.isLowStock).toList();
+ 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F7),
       appBar: AppBar(
@@ -89,14 +105,23 @@ class _AlertScreenState extends State<AlertScreen> {
         children: [
           _buildWarningBanner(),
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: _lowStockItems.length,
-              separatorBuilder: (context, index) => const Divider(height: 1),
-              itemBuilder: (context, index) {
-                return _buildAlertTile(_lowStockItems[index]);
-              },
-            ),
+            // 4 - Use the filtered list here instead of _allItems.
+            child: lowStockItems.isEmpty
+                ? const Center(
+                    child: Text(
+                      "No low stock items right now.",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  )
+                : ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: lowStockItems.length,
+                    separatorBuilder: (context, index) =>
+                        const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      return _buildAlertTile(lowStockItems[index]);
+                    },
+                  ),
           ),
         ],
       ),
@@ -152,7 +177,7 @@ class _AlertScreenState extends State<AlertScreen> {
       ),
     );
   }
-
+ 
   //reuseable widget for each alert item in the list
   Widget _buildWarningBanner() {
     return Container(
@@ -177,7 +202,7 @@ class _AlertScreenState extends State<AlertScreen> {
       ),
     );
   }
-
+ 
   //row widget for each alert item in the list
   Widget _buildAlertTile(InventoryItem item) {
     return Padding(
