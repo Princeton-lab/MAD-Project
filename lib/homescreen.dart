@@ -6,11 +6,60 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+body:SafeArea(
+  child:Padding(
+    padding:const EdgeInsets.all(20),
+    child:Column(
+      children:[
+        Row(
+          mainAxisAlignment:MainAxisAlignment.spaceBetween,
+        children:[
+          const Text('DASHBOARD',
+          style:TextStyle(
+            fontSize:24,
+            fontWeight:FontWeight.bold
+            ),
+          ),
+          IconButton(
+            onPressed:(){},
+            icon :const Icon(Icons.notifications_none),
+          ),
+   
+          
+        ],
+        ),
+               const SizedBox(height:15 ),
+          const Align(alignment: Alignment.centerLeft,
+          child: Text('Hello John!',//will be changed to the name of the user logged in
+          style:TextStyle(
+            fontSize:20,
+            fontWeight:FontWeight.bold
+            ),
+          ),
+          ),
+        const SizedBox(height:5),
+        const Align(alignment: Alignment.centerLeft,
+          child: Text('Here`s your inventory overview',
+          style:TextStyle(
+           
+            color:Colors.grey
+            ),
+          ),
+          ),
+      ]
+    )
+  ,
+  )
+),
+
+
+
+
+
 
     bottomNavigationBar: Container(
     padding: const EdgeInsets.all(15),
@@ -62,8 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.pushNamed(context, '/profilepage');
        },
       ),
-     ]
-    )
+     ],
+    ),
       )
     );
   }
