@@ -11,7 +11,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       bottomNavigationBar: Container(
+      appBar: AppBar(
+        title: const Text('Profile'),
+        titleTextStyle: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Center(
+            child: Icon(
+              Icons.person,
+              size: 100,
+            ),
+          ),
+          SizedBox(height: 20),
+           Text(
+              'Profile Screen',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              'princeton@gmail.com',
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+        ],
+      ),
+       
+    bottomNavigationBar: Container(
     padding: const EdgeInsets.all(15),
     color: const Color.fromARGB(255, 185, 176, 202),
     child: Row(
