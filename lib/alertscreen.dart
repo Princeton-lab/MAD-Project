@@ -15,9 +15,54 @@ class InventoryItem {
     required this.icon,
   });
  
+  // This is a getter that checks if the item is low stock.
   bool get isLowStock => quantity <= threshold;
 }
- 
+
+// 1 - This is now your FULL inventory (not just the low stock ones).
+//     Later this gets replaced with a Firestore query (Topic 6) that
+//     pulls every item, and you'd do the same .where() filter below
+//     (or filter it directly in the Firestore query).
+final List<InventoryItem> _allItems = [
+  InventoryItem(
+    name: "Logitech Keyboard",
+    category: "Electronics",
+    quantity: 3,
+    threshold: 5,
+    icon: Icons.keyboard,
+  ),
+  InventoryItem(
+    name: "Detergent Powder",
+    category: "Cleaning",
+    quantity: 2,
+    threshold: 5,
+    icon: Icons.local_laundry_service,
+  ),
+  InventoryItem(
+    name: "USB Cable",
+    category: "Electronics",
+    quantity: 1,
+    threshold: 10,
+    icon: Icons.cable,
+  ),
+  InventoryItem(
+    name: "Permanent Marker",
+    category: "Stationery",
+    quantity: 2,
+    threshold: 10,
+    icon: Icons.edit,
+  ),
+  //Example item that's NOT low stock, to prove the filter works.
+  //Does NOT show up on the Alerts screen.
+  InventoryItem(
+    name: "Printer Paper",
+    category: "Stationery",
+    quantity: 50,
+    threshold: 10,
+    icon: Icons.description,
+  ),
+];
+
 class AlertScreen extends StatefulWidget {
   const AlertScreen({super.key});
  
@@ -26,49 +71,6 @@ class AlertScreen extends StatefulWidget {
 }
  
 class _AlertScreenState extends State<AlertScreen> {
-  // 1 - This is now your FULL inventory (not just the low stock ones).
-  //     Later this gets replaced with a Firestore query (Topic 6) that
-  //     pulls every item, and you'd do the same .where() filter below
-  //     (or filter it directly in the Firestore query).
-  final List<InventoryItem> _allItems = [
-    InventoryItem(
-      name: "Logitech Keyboard",
-      category: "Electronics",
-      quantity: 10,
-      threshold: 5,
-      icon: Icons.keyboard,
-    ),
-    InventoryItem(
-      name: "Detergent Powder",
-      category: "Cleaning",
-      quantity: 2,
-      threshold: 5,
-      icon: Icons.local_laundry_service,
-    ),
-    InventoryItem(
-      name: "USB Cable",
-      category: "Electronics",
-      quantity: 1,
-      threshold: 10,
-      icon: Icons.cable,
-    ),
-    InventoryItem(
-      name: "Permanent Marker",
-      category: "Stationery",
-      quantity: 2,
-      threshold: 10,
-      icon: Icons.edit,
-    ),
-    // 2 - Example item that's NOT low stock, to prove the filter works.
-    //     This one should NOT show up on the Alerts screen.
-    InventoryItem(
-      name: "Printer Paper",
-      category: "Stationery",
-      quantity: 50,
-      threshold: 10,
-      icon: Icons.description,
-    ),
-  ];
  
   @override
   Widget build(BuildContext context) {
@@ -76,7 +78,8 @@ class _AlertScreenState extends State<AlertScreen> {
     //     .where() checks isLowStock for every item, .toList() turns the
     //     result back into a List<InventoryItem> that ListView can use.
     final List<InventoryItem> lowStockItems =
-        _allItems.where((item) => item.isLowStock).toList();
+        //.where is a function that filters list based on condition stated in the brackets.
+        _allItems.where((item) => item.isLowStock).toList(); 
  
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F7),
