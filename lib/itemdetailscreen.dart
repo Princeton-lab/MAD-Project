@@ -27,7 +27,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       ),
        SizedBox(height: 20),
        IconButton(
-          color: Colors.white,
+          color: Colors.red,
           tooltip: 'Open item details',
           icon: const Icon(Icons.list_alt),
        onPressed: () {

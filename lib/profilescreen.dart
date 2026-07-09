@@ -54,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       SizedBox(height: 20),
        IconButton(
-          color: Colors.white,
+          color: Colors.red,
           tooltip: 'Open profile screen',
           icon: const Icon(Icons.person),
        onPressed: () {

@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
      children: [
       IconButton(
-          color: Colors.white,
+          color: Colors.red,
           tooltip: 'Open home screen',
           icon: const Icon(Icons.home),
        onPressed: () {

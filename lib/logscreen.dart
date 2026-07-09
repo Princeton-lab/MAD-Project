@@ -45,7 +45,7 @@ class _LogScreenState extends State<LogScreen> {
       ),
       SizedBox(height: 20),
        IconButton(
-          color: Colors.white,
+          color: Colors.red,
           tooltip: 'Open log screen',
           icon: const Icon(Icons.history),
        onPressed: () {
