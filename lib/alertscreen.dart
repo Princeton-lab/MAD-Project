@@ -23,7 +23,7 @@ class InventoryItem {
 //     Later this gets replaced with a Firestore query (Topic 6) that
 //     pulls every item, and you'd do the same .where() filter below
 //     (or filter it directly in the Firestore query).
-final List<InventoryItem> _allItems = [
+final List<InventoryItem> allItems = [
   InventoryItem(
     name: "Logitech Keyboard",
     category: "Electronics",
@@ -79,7 +79,7 @@ class _AlertScreenState extends State<AlertScreen> {
     //     result back into a List<InventoryItem> that ListView can use.
     final List<InventoryItem> lowStockItems =
         //.where is a function that filters list based on condition stated in the brackets.
-        _allItems.where((item) => item.isLowStock).toList(); 
+        allItems.where((item) => item.isLowStock).toList(); 
  
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F7),
