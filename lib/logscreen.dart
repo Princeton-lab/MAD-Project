@@ -15,14 +15,42 @@ class ActivityLogEntry {
     required this.timestamp,
     required this.avatarColor,
   });
-
-  // Turns "John Doe" into "JD" for the avatar circle.
-  String get initials {
-    final parts = userName.trim().split(' ');
-    if (parts.length == 1) return parts[0].substring(0, 1).toUpperCase();
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
 }
+
+// 1 - Hardcoded activity log for now. Later this gets replaced with a
+//     Firestore query (Topic 6), ordered by timestamp descending.
+final List<ActivityLogEntry> _activityLog = [
+  ActivityLogEntry(
+    userName: "John Doe",
+    action: "Edited Logitech Keyboard",
+    timestamp: "May 21, 2024 2:30 PM",
+    avatarColor: const Color(0xFFD9A5E0),
+  ),
+  ActivityLogEntry(
+    userName: "Jane Smith",
+    action: "Added A4 Bond Paper",
+    timestamp: "May 21, 2024 11:15 AM",
+    avatarColor: const Color(0xFFA8D8B9),
+  ),
+  ActivityLogEntry(
+    userName: "John Doe",
+    action: "Deleted Old Mouse",
+    timestamp: "May 20, 2024 4:45 PM",
+    avatarColor: const Color(0xFFF3A6A6),
+  ),
+  ActivityLogEntry(
+    userName: "Jane Smith",
+    action: "Edited Detergent Powder",
+    timestamp: "May 20, 2024 9:30 AM",
+    avatarColor: const Color(0xFFF3A6A6),
+  ),
+  ActivityLogEntry(
+    userName: "John Doe",
+    action: "Added USB Cable",
+    timestamp: "May 19, 2024 3:10 PM",
+    avatarColor: const Color(0xFFA6C8F3),
+  ),
+];
 
 class LogScreen extends StatefulWidget {
   const LogScreen({super.key});
@@ -32,40 +60,6 @@ class LogScreen extends StatefulWidget {
 }
 
 class _LogScreenState extends State<LogScreen> {
-  // 1 - Hardcoded activity log for now. Later this gets replaced with a
-  //     Firestore query (Topic 6), ordered by timestamp descending.
-  final List<ActivityLogEntry> _activityLog = [
-    ActivityLogEntry(
-      userName: "John Doe",
-      action: "Edited Logitech Keyboard",
-      timestamp: "May 21, 2024 2:30 PM",
-      avatarColor: const Color(0xFFD9A5E0),
-    ),
-    ActivityLogEntry(
-      userName: "Jane Smith",
-      action: "Added A4 Bond Paper",
-      timestamp: "May 21, 2024 11:15 AM",
-      avatarColor: const Color(0xFFA8D8B9),
-    ),
-    ActivityLogEntry(
-      userName: "John Doe",
-      action: "Deleted Old Mouse",
-      timestamp: "May 20, 2024 4:45 PM",
-      avatarColor: const Color(0xFFF3A6A6),
-    ),
-    ActivityLogEntry(
-      userName: "Jane Smith",
-      action: "Edited Detergent Powder",
-      timestamp: "May 20, 2024 9:30 AM",
-      avatarColor: const Color(0xFFF3A6A6),
-    ),
-    ActivityLogEntry(
-      userName: "John Doe",
-      action: "Added USB Cable",
-      timestamp: "May 19, 2024 3:10 PM",
-      avatarColor: const Color(0xFFA6C8F3),
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -153,9 +147,7 @@ class _LogScreenState extends State<LogScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------
   // One row: avatar on the left, name/action/timestamp text on the right.
-  // ---------------------------------------------------------------------
   Widget _buildLogTile(ActivityLogEntry entry) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,14 +155,6 @@ class _LogScreenState extends State<LogScreen> {
         CircleAvatar(
           radius: 18,
           backgroundColor: entry.avatarColor,
-          child: Text(
-            entry.initials,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-          ),
         ),
         const SizedBox(width: 12),
         // Name / action / timestamp

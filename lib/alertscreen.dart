@@ -77,9 +77,12 @@ class _AlertScreenState extends State<AlertScreen> {
     // 3 - Filter down to only the items that are below/at their threshold.
     //     .where() checks isLowStock for every item, .toList() turns the
     //     result back into a List<InventoryItem> that ListView can use.
-    final List<InventoryItem> lowStockItems =
-        //.where is a function that filters list based on condition stated in the brackets.
-        allItems.where((item) => item.isLowStock).toList(); 
+    final List<InventoryItem> lowStockItems = [];
+    for (InventoryItem item in allItems) {
+      if (item.isLowStock) {
+        lowStockItems.add(item);
+      }
+    }
  
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F7),
@@ -207,7 +210,7 @@ class _AlertScreenState extends State<AlertScreen> {
   }
  
   //row widget for each alert item in the list
-  Widget _buildAlertTile(InventoryItem item) {
+  Widget _buildAlertTile(InventoryItem item) { //item is a temporary variable
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
