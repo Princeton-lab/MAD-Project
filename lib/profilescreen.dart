@@ -19,28 +19,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
           color: Colors.black,
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Center(
-            child: Icon(
-              Icons.person,
-              size: 100,
-            ),
-          ),
-          SizedBox(height: 20),
-           Text(
-              'Profile Screen',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              'princeton@gmail.com',
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20),
-        ],
+body: Center(
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      const Icon(
+        Icons.person,
+        size: 100,
       ),
-       
+      const SizedBox(height: 20),
+      const Text(
+        'Profile Screen',
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      const Text('princeton@gmail.com'),
+      const SizedBox(height: 30),
+
+     ListTile(
+      leading: const Icon(Icons.person_outline),
+      title: const Text("Account Information"),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () {
+        Navigator.pushNamed(context, '/accountinfo');
+      },
+    ),
+    const Divider(),
+
+    ListTile(
+      leading: const Icon(Icons.lock_outline),
+      title: const Text("Change Password"),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () {
+        Navigator.pushNamed(context, '/changepassword');
+      },
+    ),
+    const Divider(),
+
+    ListTile(
+      leading: const Icon(Icons.info_outline),
+      title: const Text("About App"),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () {
+        Navigator.pushNamed(context, '/aboutapp');
+      },
+    ),
+    SizedBox(height: 30),
+    FilledButton(
+      onPressed: () {
+        // Handle logout logic here
+        Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.red,
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+      ),
+      child: const Text(
+        'Logout',
+        style: TextStyle(fontSize: 16, color: Colors.white),
+      ),
+    ),
+    ],
+  ),
+),
     bottomNavigationBar: Container(
     padding: const EdgeInsets.all(15),
     color: const Color.fromARGB(255, 185, 176, 202),

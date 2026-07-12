@@ -7,6 +7,9 @@ import 'package:project/adminscreen.dart';
 import 'package:project/alertscreen.dart';
 import 'package:project/logscreen.dart';
 import 'package:project/profilescreen.dart';
+import 'package:project/ProfileScreen/aboutapp.dart';
+import 'package:project/ProfileScreen/accountinfo.dart';
+import 'package:project/ProfileScreen/changepassword.dart';
 
 void main() {
   runApp( MaterialApp(
@@ -20,6 +23,9 @@ void main() {
 '/alertpage':(context) => const AlertScreen(),
 '/logpage':(context) => const LogScreen(),
 '/profilepage':(context) => const ProfileScreen(),
+'/aboutapp':(context) => const AboutApp(),
+'/accountinfo':(context) => const AccountInfo(),
+'/changepassword':(context) => const ChangePassword(),
 }
     
   ));
