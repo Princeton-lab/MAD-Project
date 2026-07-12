@@ -10,10 +10,10 @@ import 'package:project/profilescreen.dart';
 import 'package:project/ProfileScreen/aboutapp.dart';
 import 'package:project/ProfileScreen/accountinfo.dart';
 import 'package:project/ProfileScreen/changepassword.dart';
-
+import 'package:project/LoginScreen/loginscreen.dart';
 void main() {
   runApp( MaterialApp(
-    home: HomeScreen(),
+    home: const HomeScreen(),
     routes: {
 '/homepage': (context) => const HomeScreen(),
 '/stockpage':(context) => const StockScreen(),
