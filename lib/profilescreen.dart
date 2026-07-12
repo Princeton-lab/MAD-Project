@@ -70,9 +70,9 @@ body: Center(
     FilledButton(
       onPressed: () {
         // Handle logout logic here
-        Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+        Navigator.pushNamed(context, '/loginscreen');
       },
-      style: ElevatedButton.styleFrom(
+      style: FilledButton.styleFrom(
         backgroundColor: Colors.red,
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
       ),

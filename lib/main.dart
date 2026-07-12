@@ -13,7 +13,7 @@ import 'package:project/ProfileScreen/changepassword.dart';
 import 'package:project/LoginScreen/loginscreen.dart';
 void main() {
   runApp( MaterialApp(
-    home: const HomeScreen(),
+    home: const LoginScreen(),
     routes: {
 '/homepage': (context) => const HomeScreen(),
 '/stockpage':(context) => const StockScreen(),
@@ -26,6 +26,7 @@ void main() {
 '/aboutapp':(context) => const AboutApp(),
 '/accountinfo':(context) => const AccountInfo(),
 '/changepassword':(context) => const ChangePassword(),
+'/loginscreen':(context) => const LoginScreen(),
 }
     
   ));
