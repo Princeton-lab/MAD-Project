@@ -50,37 +50,47 @@ body:SafeArea(
             ),
           ),
           ),
-          SizedBox(height: 20),
-       IconButton(
-          color: Colors.black,
-          tooltip: 'Open stock screen',
-          icon: const Icon(Icons.inventory_2_outlined),
-       onPressed: () {
-        Navigator.pushNamed(context, '/stockpage');
-       },
+    
+      
+        const SizedBox(height: 20),
+        Align(
+        alignment: Alignment.centerRight,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            IconButton(
+              color: Colors.black,
+              tooltip: 'Open stock screen',
+              icon: const Icon(Icons.inventory_2_outlined),
+              onPressed: () {
+                Navigator.pushNamed(context, '/stockpage');
+              },
+            ),
+            const SizedBox(height: 20),
+            IconButton(
+              color: Colors.black,
+              tooltip: 'Open low stocks screen',
+              icon: const Icon(Icons.warning_amber_rounded),
+              onPressed: () {
+                Navigator.pushNamed(context, '/alertpage');
+              },
+            ),
+            const SizedBox(height: 20),
+            IconButton(
+              color: Colors.black,
+              tooltip: 'Open recent activities',
+              icon: const Icon(Icons.calendar_today),
+              onPressed: () {
+                Navigator.pushNamed(context, '/logpage');
+              },
+            ),
+          ],
+        ),
       ),
-      SizedBox(height: 20),
-      IconButton(
-          color: Colors.black,
-          tooltip: 'Open low stocks screen',
-          icon: const Icon(Icons.warning_amber_rounded),
-       onPressed: () {
-        Navigator.pushNamed(context, '/alertpage');
-       },
-      ),
-      SizedBox(height: 20),
-      IconButton(
-          color: Colors.black,
-          tooltip: 'Open  recent activities ',
-          icon: const Icon(Icons.calendar_today),
-       onPressed: () {
-        Navigator.pushNamed(context, '/logpage');
-       },
-      ),
-      ]
-    )
-  ,
-  )
+      ],
+    ),
+  ),
 ),
 
 
