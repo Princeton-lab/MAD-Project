@@ -12,6 +12,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,13 +55,26 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(height: 20),
         TextField(
           controller: passwordController,
+          obscureText: _obscurePassword,
           decoration: InputDecoration(
             labelText: 'Password',
             border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10)),
             prefixIcon: Icon(Icons.lock_outlined),
-            suffixIcon: Icon(Icons.visibility_off_outlined),
+            suffixIcon: IconButton (
+              icon: Icon (
+            _obscurePassword
+            ?Icons.visibility_off_outlined
+            :Icons.visibility_outlined),
+            
+             onPressed: () {
+        setState(() {
+          _obscurePassword = !_obscurePassword;
+        });
+      },
+            ),
           ),
+          
         ),
         ])
         ),
