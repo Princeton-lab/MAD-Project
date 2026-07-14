@@ -50,10 +50,64 @@ body:SafeArea(
             ),
           ),
           ),
-      ]
-    )
-  ,
-  )
+    
+      
+       
+        Container(
+  padding: const EdgeInsets.all(20),
+
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+     
+
+      // LEFT SIDE
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          Text(
+            "Total Items",
+            style: TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+
+          SizedBox(height: 8),
+
+          Text(
+            "142",
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+        ],
+      ),
+
+      // RIGHT SIDE
+      Container(padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.purple[100],
+        borderRadius: BorderRadius.circular(12),
+        
+      ),
+     child:IconButton(
+          color: Colors.purple,
+          tooltip: 'Open stock screen',
+          icon: const Icon(Icons.inventory_2),
+       onPressed: () {
+        Navigator.pushNamed(context, '/stockpage');
+       },
+      ),
+  )],
+  ),
+)
+      ],
+    ),
+  
+  ),
 ),
 
 

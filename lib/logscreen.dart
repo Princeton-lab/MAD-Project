@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
-// ---------------------------------------------------------------------------
 // Data model for one activity log entry
-// ---------------------------------------------------------------------------
 class ActivityLogEntry {
   final String userName;
   final String action; // e.g. "Edited Logitech Keyboard"
@@ -77,14 +74,6 @@ class _LogScreenState extends State<LogScreen> {
           "Activity Log",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // Search bar skipped for now
-            },
-          ),
-        ],
       ),
       body: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -158,7 +147,7 @@ class _LogScreenState extends State<LogScreen> {
         ),
         const SizedBox(width: 12),
         // Name / action / timestamp
-        Expanded(
+        Expanded( //make widget take up all the remaining space in the row
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
