@@ -11,6 +11,7 @@ import 'package:project/ProfileScreen/aboutapp.dart';
 import 'package:project/ProfileScreen/accountinfo.dart';
 import 'package:project/ProfileScreen/changepassword.dart';
 import 'package:project/LoginScreen/loginscreen.dart';
+import 'package:project/LoginScreen/register.dart';
 void main() {
   runApp( MaterialApp(
     home: const LoginScreen(),
@@ -27,8 +28,9 @@ void main() {
 '/accountinfo':(context) => const AccountInfo(),
 '/changepassword':(context) => const ChangePassword(),
 '/loginscreen':(context) => const LoginScreen(),
-}
-    
-  ));
+'/register':(context) => const Register(),
+    },
+
+    ));
 }
 

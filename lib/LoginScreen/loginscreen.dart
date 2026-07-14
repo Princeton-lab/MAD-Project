@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project/LoginScreen/registerdataservice.dart';
+import 'package:project/LoginScreen/info.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -8,6 +10,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           children: [
         TextField(
+          controller: emailController,
           decoration: InputDecoration(
             labelText: 'Email',
             border: OutlineInputBorder(
@@ -47,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         SizedBox(height: 20),
         TextField(
+          controller: passwordController,
           decoration: InputDecoration(
             labelText: 'Password',
             border: OutlineInputBorder(
@@ -69,33 +75,49 @@ class _LoginScreenState extends State<LoginScreen> {
 
         const SizedBox(height: 20),
 
-        SizedBox(
-          width: 200,
-          height: 50,
-          child: FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.deepPurple,
-              padding: const EdgeInsets.all(15),
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/homepage');
-            },
-            child: const Text("Login"),
+     SizedBox(
+  width: 200,
+  height: 50,
+  child: FilledButton(
+    style: FilledButton.styleFrom(
+      backgroundColor: Colors.deepPurple,
+      padding: const EdgeInsets.all(15),
+    ),
+    onPressed: () {
+      Info? user =
+          Registerdata.getInfoByEmail(emailController.text);
 
+      if (user != null &&
+          user.password == passwordController.text) {
+        Navigator.pushNamed(context, '/homepage');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Invalid email or password"),
           ),
-        ),
+        );
+      }
+    },
+    child: const Text("Login"),
+  ),
+),
 
         const SizedBox(height: 20),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text("Don't have an account? "),
-            Text(
-              "Register",
-              style: TextStyle(
-                color: Colors.deepPurple,
-                fontWeight: FontWeight.bold,
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/register');
+              },
+              child: Text(
+                "Register",
+                style: TextStyle(
+                  color: Colors.deepPurple,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
