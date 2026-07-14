@@ -52,44 +52,61 @@ body:SafeArea(
           ),
     
       
-        const SizedBox(height: 20),
-        Align(
-        alignment: Alignment.centerRight,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            IconButton(
-              color: Colors.black,
-              tooltip: 'Open stock screen',
-              icon: const Icon(Icons.inventory_2_outlined),
-              onPressed: () {
-                Navigator.pushNamed(context, '/stockpage');
-              },
+       
+        Container(
+  padding: const EdgeInsets.all(20),
+
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+     
+
+      // LEFT SIDE
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          Text(
+            "Total Items",
+            style: TextStyle(
+              color: Colors.grey,
             ),
-            const SizedBox(height: 20),
-            IconButton(
-              color: Colors.black,
-              tooltip: 'Open low stocks screen',
-              icon: const Icon(Icons.warning_amber_rounded),
-              onPressed: () {
-                Navigator.pushNamed(context, '/alertpage');
-              },
+          ),
+
+          SizedBox(height: 8),
+
+          Text(
+            "142",
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 20),
-            IconButton(
-              color: Colors.black,
-              tooltip: 'Open recent activities',
-              icon: const Icon(Icons.calendar_today),
-              onPressed: () {
-                Navigator.pushNamed(context, '/logpage');
-              },
-            ),
-          ],
-        ),
+          ),
+
+        ],
       ),
+
+      // RIGHT SIDE
+      Container(padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.purple[100],
+        borderRadius: BorderRadius.circular(12),
+        
+      ),
+     child:IconButton(
+          color: Colors.purple,
+          tooltip: 'Open stock screen',
+          icon: const Icon(Icons.inventory_2),
+       onPressed: () {
+        Navigator.pushNamed(context, '/stockpage');
+       },
+      ),
+  )],
+  ),
+)
       ],
     ),
+  
   ),
 ),
 
