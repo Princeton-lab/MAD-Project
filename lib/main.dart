@@ -12,7 +12,15 @@ import 'package:project/ProfileScreen/accountinfo.dart';
 import 'package:project/ProfileScreen/changepassword.dart';
 import 'package:project/LoginScreen/loginscreen.dart';
 import 'package:project/LoginScreen/register.dart';
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
   runApp( MaterialApp(
     home: const LoginScreen(),
     routes: {

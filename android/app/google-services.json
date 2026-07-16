@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "848752043112",
+    "project_id": "helloart-a4111",
+    "storage_bucket": "helloart-a4111.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848752043112:android:9435d0296cea38f43dc7dd",
+        "android_client_info": {
+          "package_name": "com.example.project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5xQNafGm_C95Kvzmvq1_E0AVEwVcy9g0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
