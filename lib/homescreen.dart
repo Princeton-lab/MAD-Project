@@ -53,10 +53,16 @@ body:SafeArea(
     
       
        
-        Container(
+  Container(
   padding: const EdgeInsets.all(20),
+  width: double.infinity,
+  decoration: BoxDecoration(
+    border: Border.all(color: Colors.black),
+    borderRadius: BorderRadius.circular(12),
+  ),
 
   child: Row(
+    
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
      
@@ -69,7 +75,7 @@ body:SafeArea(
           Text(
             "Total Items",
             style: TextStyle(
-              color: Colors.grey,
+              color: Colors.black,
             ),
           ),
 
@@ -89,7 +95,7 @@ body:SafeArea(
       // RIGHT SIDE
       Container(padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.purple[100],
+        color: Colors.purpleAccent[50],
         borderRadius: BorderRadius.circular(12),
         
       ),
@@ -103,7 +109,194 @@ body:SafeArea(
       ),
   )],
   ),
+),
+const SizedBox(height: 20),
+  
+       
+  Container(
+  padding: const EdgeInsets.all(20),
+  width: double.infinity,
+  decoration: BoxDecoration(
+  border: Border.all(color: Colors.black),
+    
+    borderRadius: BorderRadius.circular(12),
+  ),
+
+  child: Row(
+    
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+     
+
+      // LEFT SIDE
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          Text(
+            "Low Stock Items",
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+
+          SizedBox(height: 8),
+
+          Text(
+            "TBA",//to be added
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+        ],
+      ),
+
+      // RIGHT SIDE
+      Container(padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        borderRadius: BorderRadius.circular(12),
+        
+      ),
+     child:IconButton(
+          color: Colors.red,
+          tooltip: 'Open low item screen',
+          icon: const Icon(Icons.warning_amber_rounded),
+       onPressed: () {
+        Navigator.pushNamed(context, '/alertpage');
+       },
+      ),
+  )],
+  ),
+),
+SizedBox(height: 20),
+
+ Container(
+  padding: const EdgeInsets.all(20),
+  width: double.infinity,
+  decoration: BoxDecoration(
+  border: Border.all(color: Colors.black),
+    
+    borderRadius: BorderRadius.circular(12),
+  ),
+
+  child: Row(
+    
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+     
+
+      // LEFT SIDE
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          Text(
+            "Total Stock Value",
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+
+          SizedBox(height: 8),
+
+          Text(
+            "TBA",//to be added
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+        ],
+      ),
+
+      // RIGHT SIDE
+      Container(padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        borderRadius: BorderRadius.circular(12),
+        
+      ),
+     child:IconButton(
+          color: Colors.green,
+          tooltip: 'Open total stock value screen',
+          icon: const Icon(Icons.attach_money),
+       onPressed: () {
+        Navigator.pushNamed(context, '/stockpage');
+       },
+      ),
+  )],
+  ),
+),
+SizedBox(height: 20),
+
+ Container(
+  padding: const EdgeInsets.all(20),
+  width: double.infinity,
+  decoration: BoxDecoration(
+  border: Border.all(color: Colors.black),
+    
+    borderRadius: BorderRadius.circular(12),
+  ),
+
+  child: Row(
+    
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+     
+
+      // LEFT SIDE
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          Text(
+            "Recent activities",
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+
+          SizedBox(height: 8),
+
+          Text(
+            "TBA",//to be added
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+        ],
+      ),
+
+      // RIGHT SIDE
+      Container(padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        borderRadius: BorderRadius.circular(12),
+        
+      ),
+     child:IconButton(
+          color: Colors.blue,
+          tooltip: 'Open recent activities',
+          icon: const Icon(Icons.calendar_month),
+       onPressed: () {
+        Navigator.pushNamed(context, '/logpage');
+       },
+      ),
+  )],
+  ),
 )
+
+
+
+
+
+
       ],
     ),
   
