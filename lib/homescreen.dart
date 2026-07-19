@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,7 +14,8 @@ class _HomeScreenState extends State<HomeScreen> {
 body:SafeArea(
   child:Padding(
     padding:const EdgeInsets.all(20),
-    child:Column(
+    child:ListView(
+
       children:[
         Row(
           mainAxisAlignment:MainAxisAlignment.spaceBetween,
@@ -81,13 +83,27 @@ body:SafeArea(
 
           SizedBox(height: 8),
 
-          Text(
-            "142",
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+          .collection('Items')
+          .snapshots(),
+  builder: (context, snapshot) {
+
+    if (!snapshot.hasData) {
+      return const Text("0");
+    }
+
+    final items = snapshot.data!.docs;
+
+    return Text(
+      items.length.toString(),
+      style: const TextStyle(
+        fontSize: 30,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  },
+),
 
         ],
       ),
@@ -95,7 +111,7 @@ body:SafeArea(
       // RIGHT SIDE
       Container(padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.purpleAccent[50],
+        color: Colors.grey[300],
         borderRadius: BorderRadius.circular(12),
         
       ),
@@ -292,21 +308,11 @@ SizedBox(height: 20),
   ),
 )
 
-
-
-
-
-
       ],
     ),
   
   ),
 ),
-
-
-
-
-
 
     bottomNavigationBar: Container(
     padding: const EdgeInsets.all(15),
@@ -364,4 +370,5 @@ SizedBox(height: 20),
     );
   }
   }
+   
    

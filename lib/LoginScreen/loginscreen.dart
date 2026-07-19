@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; 
@@ -111,12 +111,16 @@ class _LoginScreenState extends State<LoginScreen> {
         .collection('users')
         .doc(user!.uid)
         .get();
+        print(doc.exists);
+        print(doc.data());
 
     String role = doc['role'];
 
     if (role == "admin") {
+      print("ADMIN DETECTED");
       Navigator.pushNamed(context, '/adminpage');
     } else {
+      print("STAFF DETECTED");
       Navigator.pushNamed(context, '/homepage');
     }
   } on FirebaseAuthException catch (e) {

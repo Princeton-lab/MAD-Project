@@ -14,6 +14,7 @@ import 'package:project/LoginScreen/loginscreen.dart';
 import 'package:project/LoginScreen/register.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:project/addscreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +38,7 @@ void main() async {
 '/changepassword':(context) => const ChangePassword(),
 '/loginscreen':(context) => const LoginScreen(),
 '/register':(context) => const Register(),
+'/AddScreen':(context)=> const AddScreen(),
     },
 
     ));
