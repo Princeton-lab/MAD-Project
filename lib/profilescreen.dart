@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -8,6 +8,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  User? user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +36,7 @@ body: Center(
           fontWeight: FontWeight.bold,
         ),
       ),
-      const Text('princeton@gmail.com'),
+      Text(user?.email ?? "no email"),
       const SizedBox(height: 30),
 
      ListTile(

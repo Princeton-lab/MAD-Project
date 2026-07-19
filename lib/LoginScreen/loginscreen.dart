@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:project/LoginScreen/registerdataservice.dart';
-import 'package:project/LoginScreen/info.dart';
+// ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; 
+import 'package:cloud_firestore/cloud_firestore.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -98,21 +99,42 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.deepPurple,
       padding: const EdgeInsets.all(15),
     ),
-    onPressed: () {
-      Info? user =
-          Registerdata.getInfoByEmail(emailController.text);
+    onPressed: () async {
+  try {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+    User? user = FirebaseAuth.instance.currentUser;
 
-      if (user != null &&
-          user.password == passwordController.text) {
-        Navigator.pushNamed(context, '/homepage');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Invalid email or password"),
-          ),
-        );
-      }
-    },
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get();
+
+    String role = doc['role'];
+
+    if (role == "admin") {
+      Navigator.pushNamed(context, '/adminpage');
+    } else {
+      Navigator.pushNamed(context, '/homepage');
+    }
+  } on FirebaseAuthException catch (e) {
+    String message = "Login failed";
+
+    if (e.code == 'user-not-found') {
+      message = "No user found with that email.";
+    } else if (e.code == 'wrong-password') {
+      message = "Incorrect password.";
+    } else if (e.code == 'invalid-credential') {
+      message = "Invalid email or password.";
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+},
     child: const Text("Login"),
   ),
 ),

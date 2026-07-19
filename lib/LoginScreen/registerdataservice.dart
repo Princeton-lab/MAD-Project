@@ -1,31 +1,23 @@
-import 'package:project/LoginScreen/info.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Registerdata {
-  static List<Info> z = [];
-  static int getcount(){
-    return z.length;
+  static Future<void> addInfo(String email, String password) async {
+    // Create user in Firebase Authentication
+    UserCredential credential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    // Save additional user data in Firestore
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(credential.user!.uid)
+        .set({
+      'email': email,
+      'role': 'staff',
+      'createdAt': Timestamp.now(),
+    });
   }
-  static void addInfo(String email, String password){
-    z.add (Info(email: email, password: password));
-  }
-  static Info getdata(int index){
-    return z[index];
-  }
-  static Info? getInfoByEmail(String email){
-    for (int i=0; i<z.length; i++){
-    if (z[i].email == email){
-    return z[i];
-  }
-  }
-  return null;
-  }
-  static void removeArtAt(int index){       
-z.removeAt(index);  
-}
-static void removeInfoByEmail(String email) {
-for (int i = 0; i < z.length; i++) {
-if (z[i].email == email) {
-z.removeAt(i);
-}
-}
-}
 }

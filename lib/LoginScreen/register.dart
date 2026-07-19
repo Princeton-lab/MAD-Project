@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:project/LoginScreen/registerdataservice.dart';
 
@@ -51,10 +53,24 @@ class _RegisterState extends State<Register> {
                 backgroundColor: Colors.purpleAccent,
                 foregroundColor: Colors.white,
               ),
-              onPressed: () {
-                Registerdata.addInfo(emailController.text, passwordController.text);
-                Navigator.pushNamed(context, '/loginscreen');
-              },
+              onPressed: () async {
+               try {
+              await Registerdata.addInfo(
+              emailController.text.trim(),
+              passwordController.text.trim(),
+              );
+
+              ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Registration successful!")),
+              );
+
+               Navigator.pushNamed(context, '/loginscreen');
+              } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(e.toString())),
+             );
+            }
+          },
               child: Text('Register'),
             ),
           ],
