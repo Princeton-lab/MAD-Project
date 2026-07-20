@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -13,6 +15,7 @@ class _EditScreenState extends State<EditScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController categoryController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController();
 
   int quantity = 0;
   bool loaded = false;
@@ -88,6 +91,16 @@ class _EditScreenState extends State<EditScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 20),
+
+            TextField(
+            controller: quantityController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+            labelText: "Quantity to Add / Remove",
+            border: OutlineInputBorder(),
+              ),
+            ),
 
             const SizedBox(height: 20),
 
@@ -100,9 +113,12 @@ class _EditScreenState extends State<EditScreen> {
                     foregroundColor: Colors.white,
                   ),
                   onPressed: () {
+                    int change =int.tryParse(quantityController.text) ?? 0;
                     setState(() {
-                      if (quantity > 0) {
-                        quantity--;
+                      if (quantity - change >= 0) {
+                        quantity-= change;
+                      } else{
+                        quantity = 0;
                       }
                     });
                   },
@@ -116,8 +132,9 @@ class _EditScreenState extends State<EditScreen> {
                     foregroundColor: Colors.white,
                   ),
                   onPressed: () {
+                    int change = int.tryParse(quantityController.text) ?? 0;
                     setState(() {
-                      quantity++;
+                      quantity += change;
                     });
                   },
                   icon: const Icon(Icons.add),
