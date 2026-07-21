@@ -94,11 +94,11 @@ class _EditScreenState extends State<EditScreen> {
             const SizedBox(height: 20),
 
             TextField(
-            controller: quantityController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-            labelText: "Quantity to Add / Remove",
-            border: OutlineInputBorder(),
+              controller: quantityController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: "Quantity to Add / Remove",
+                border: OutlineInputBorder(),
               ),
             ),
 
@@ -113,11 +113,11 @@ class _EditScreenState extends State<EditScreen> {
                     foregroundColor: Colors.white,
                   ),
                   onPressed: () {
-                    int change =int.tryParse(quantityController.text) ?? 0;
+                    int change = int.tryParse(quantityController.text) ?? 0;
                     setState(() {
                       if (quantity - change >= 0) {
-                        quantity-= change;
-                      } else{
+                        quantity -= change;
+                      } else {
                         quantity = 0;
                       }
                     });
@@ -163,6 +163,16 @@ class _EditScreenState extends State<EditScreen> {
                       'Category': categoryController.text,
                       'Price': double.parse(priceController.text),
                       'Quantity': quantity,
+                    });
+
+                    // 1 - Log this action to the ActivityLog collection so
+                    //     it shows up on the Activity Log screen.
+                    await FirebaseFirestore.instance
+                        .collection('ActivityLog')
+                        .add({
+                      'User': 'John Doe', // placeholder until login is wired up
+                      'Action': 'Edited ${nameController.text}',
+                      'Timestamp': FieldValue.serverTimestamp(),
                     });
 
                     ScaffoldMessenger.of(context).showSnackBar(
