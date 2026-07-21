@@ -1,89 +1,68 @@
 import 'package:flutter/material.dart';
- 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+// ---------------------------------------------------------------------------
+// Data model
+// ---------------------------------------------------------------------------
 class InventoryItem {
+  final String id; // Firestore document ID - needed later for edit/delete
   final String name;
   final String category;
   final int quantity;
-  final int threshold;
-  final IconData icon; // placeholder for a product image
- 
+  final int minimumStock;
+  final IconData icon;
+
   InventoryItem({
+    required this.id,
     required this.name,
     required this.category,
     required this.quantity,
-    required this.threshold,
+    required this.minimumStock,
     required this.icon,
   });
- 
-  // This is a getter that checks if the item is low stock.
-  bool get isLowStock => quantity <= threshold;
-}
 
-// 1 - This is now your FULL inventory (not just the low stock ones).
-//     Later this gets replaced with a Firestore query (Topic 6) that
-//     pulls every item, and you'd do the same .where() filter below
-//     (or filter it directly in the Firestore query).
-final List<InventoryItem> allItems = [
-  InventoryItem(
-    name: "Logitech Keyboard",
-    category: "Electronics",
-    quantity: 3,
-    threshold: 5,
-    icon: Icons.keyboard,
-  ),
-  InventoryItem(
-    name: "Detergent Powder",
-    category: "Cleaning",
-    quantity: 2,
-    threshold: 5,
-    icon: Icons.local_laundry_service,
-  ),
-  InventoryItem(
-    name: "USB Cable",
-    category: "Electronics",
-    quantity: 1,
-    threshold: 10,
-    icon: Icons.cable,
-  ),
-  InventoryItem(
-    name: "Permanent Marker",
-    category: "Stationery",
-    quantity: 2,
-    threshold: 10,
-    icon: Icons.edit,
-  ),
-  //Example item that's NOT low stock, to prove the filter works.
-  //Does NOT show up on the Alerts screen.
-  InventoryItem(
-    name: "Printer Paper",
-    category: "Stationery",
-    quantity: 50,
-    threshold: 10,
-    icon: Icons.description,
-  ),
-];
+  bool get isLowStock => quantity <= minimumStock;
+
+  // 1 - Factory constructor: builds an InventoryItem straight from a
+  //     Firestore document. This is where the field-name mapping happens,
+  //     matching exactly what's in your Firestore console:
+  //     "Item Name", "Category", "Quantity", "Minimum Stock".
+  factory InventoryItem.fromFirestore(QueryDocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return InventoryItem(
+      id: doc.id,
+      name: data['Item Name'] ?? '',
+      category: data['Category'] ?? '',
+      quantity: data['Quantity'] ?? 0,
+      minimumStock: data['Minimum Stock'] ?? 0,
+      icon: _iconForCategory(data['Category'] ?? ''),
+    );
+  }
+
+  // 2 - Firestore has no "icon" field, so we pick one based on category,
+  //     matching the same icons your teammate used on the Stock Screen.
+  static IconData _iconForCategory(String category) {
+    switch (category) {
+      case 'Electronics':
+        return Icons.laptop;
+      case 'Accessory':
+        return Icons.mouse;
+      default:
+        return Icons.inventory_2;
+    }
+  }
+}
 
 class AlertScreen extends StatefulWidget {
   const AlertScreen({super.key});
- 
+
   @override
   State<AlertScreen> createState() => _AlertScreenState();
 }
- 
+
 class _AlertScreenState extends State<AlertScreen> {
- 
   @override
   Widget build(BuildContext context) {
-    // 3 - Filter down to only the items that are below/at their threshold.
-    //     .where() checks isLowStock for every item, .toList() turns the
-    //     result back into a List<InventoryItem> that ListView can use.
-    final List<InventoryItem> lowStockItems = [];
-    for (InventoryItem item in allItems) {
-      if (item.isLowStock) {
-        lowStockItems.add(item);
-      }
-    }
- 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F7),
       appBar: AppBar(
@@ -107,29 +86,65 @@ class _AlertScreenState extends State<AlertScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          _buildWarningBanner(),
-          Expanded(
-            // 4 - Use the filtered list here instead of _allItems.
-            child: lowStockItems.isEmpty
-                ? const Center(
-                    child: Text(
-                      "No low stock items right now.",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  )
-                : ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: lowStockItems.length,
-                    separatorBuilder: (context, index) =>
-                        const Divider(height: 1),
-                    itemBuilder: (context, index) {
-                      return _buildAlertTile(lowStockItems[index]);
-                    },
-                  ),
-          ),
-        ],
+      // 3 - StreamBuilder listens to the "Items" collection LIVE. Every
+      //     time a document changes (added/edited/deleted anywhere in the
+      //     app), this rebuilds automatically - no manual refresh needed.
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('Items').snapshots(),
+        builder: (context, snapshot) {
+          // Still waiting for the first batch of data from Firestore
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // Something went wrong talking to Firestore
+          if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          }
+
+          // No documents in the collection at all
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text(
+                "No items found.",
+                style: TextStyle(color: Colors.grey),
+              ),
+            );
+          }
+
+          // 4 - Convert every Firestore document into an InventoryItem,
+          //     then keep only the ones that are low stock.
+          final List<InventoryItem> allItems = snapshot.data!.docs
+              .map((doc) => InventoryItem.fromFirestore(doc))
+              .toList();
+
+          final List<InventoryItem> lowStockItems =
+              allItems.where((item) => item.isLowStock).toList();
+
+          return Column(
+            children: [
+              _buildWarningBanner(),
+              Expanded(
+                child: lowStockItems.isEmpty
+                    ? const Center(
+                        child: Text(
+                          "No low stock items right now.",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      )
+                    : ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: lowStockItems.length,
+                        separatorBuilder: (context, index) =>
+                            const Divider(height: 1),
+                        itemBuilder: (context, index) {
+                          return _buildAlertTile(lowStockItems[index]);
+                        },
+                      ),
+              ),
+            ],
+          );
+        },
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(15),
@@ -154,7 +169,6 @@ class _AlertScreenState extends State<AlertScreen> {
               },
             ),
             IconButton(
-              // Highlighted since this is the current screen
               color: Colors.red,
               tooltip: 'Open alert screen',
               icon: const Icon(Icons.notifications),
@@ -183,8 +197,7 @@ class _AlertScreenState extends State<AlertScreen> {
       ),
     );
   }
- 
-  //reuseable widget for each alert item in the list
+
   Widget _buildWarningBanner() {
     return Container(
       margin: const EdgeInsets.all(16),
@@ -208,14 +221,12 @@ class _AlertScreenState extends State<AlertScreen> {
       ),
     );
   }
- 
-  //row widget for each alert item in the list
-  Widget _buildAlertTile(InventoryItem item) { //item is a temporary variable
+
+  Widget _buildAlertTile(InventoryItem item) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: [
-          // Product "image" placeholder
           Container(
             width: 48,
             height: 48,
@@ -226,7 +237,6 @@ class _AlertScreenState extends State<AlertScreen> {
             child: Icon(item.icon, color: Colors.black54),
           ),
           const SizedBox(width: 12),
-          // Name / category / qty
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,13 +255,12 @@ class _AlertScreenState extends State<AlertScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  "Qty: ${item.quantity} / Threshold: ${item.threshold}",
+                  "Qty: ${item.quantity} / Threshold: ${item.minimumStock}",
                   style: const TextStyle(fontSize: 13),
                 ),
               ],
             ),
           ),
-          // "Low Stock" badge
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
