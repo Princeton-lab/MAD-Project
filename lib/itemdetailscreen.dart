@@ -98,7 +98,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
         detailRow("Category", item["Category"]),
         detailRow("Quantity", item["Quantity"].toString()),
-        detailRow("Unit Price", "\$${item["Unit Price"]}"),
+        detailRow("Price", "\$${item["Price"]}"),
         detailRow(
           "Low Stock Threshold",
           item["Minimum Stock"].toString(),
