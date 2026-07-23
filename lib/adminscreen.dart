@@ -429,11 +429,7 @@ SizedBox(height: 20),
        SizedBox(height: 20),
        IconButton(
           color: Colors.white,
-<<<<<<< HEAD
-          tooltip: 'Open stocks',
-=======
           tooltip: 'Open stock page',
->>>>>>> 61efc199395864035c8e2484e3915cbc0c6d7d0b
           icon: const Icon(Icons.list_alt),
        onPressed: () {
         Navigator.pushNamed(context, '/stockpage');
