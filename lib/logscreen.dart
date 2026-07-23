@@ -47,7 +47,8 @@ class ActivityLogEntry {
       period = "PM";
     }
 
-    return "$month $day, $year $hour:$minute $period";
+    return month + " " + day.toString() + ", " + year.toString() + " " +
+        hour.toString() + ":" + minute + " " + period;
   }
 }
 
