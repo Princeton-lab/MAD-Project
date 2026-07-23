@@ -19,6 +19,8 @@ class _AddScreenState extends State<AddScreen> {
     TextEditingController quantityController = TextEditingController();
     TextEditingController priceController = TextEditingController();
     TextEditingController minimumStockController = TextEditingController();
+    TextEditingController barcodeController = TextEditingController();
+    TextEditingController supplierController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -79,6 +81,28 @@ class _AddScreenState extends State<AddScreen> {
               ),
             ),
 
+            const SizedBox(height: 15),
+
+            TextField(
+              controller: barcodeController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: "Barcode",
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            const SizedBox(height: 15),
+
+            TextField(
+              controller: supplierController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: "Supplier",
+                border: OutlineInputBorder(),
+              ),
+            ),
+
             const SizedBox(height: 25),
 
             ElevatedButton(
@@ -95,6 +119,8 @@ class _AddScreenState extends State<AddScreen> {
                     //     ("Minimum Stock" with a space).
                     'Minimum Stock':
                         int.parse(minimumStockController.text),
+                        'Barcode': barcodeController,
+                        'Supplier':supplierController
                   });
 
                   // Log this action to the ActivityLog collection so

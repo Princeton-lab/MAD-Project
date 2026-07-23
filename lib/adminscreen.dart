@@ -25,13 +25,7 @@ class _AdminScreenState extends State<AdminScreen> {
             fontSize:24,
             fontWeight:FontWeight.bold
             ),
-          ),
-          IconButton(
-            onPressed:(){},
-            icon :const Icon(Icons.notifications_none),
-          ),
-   
-          
+          ),          
         ],
         ),
                const SizedBox(height:15 ),
