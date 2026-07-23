@@ -31,11 +31,33 @@
                 fontSize: 20,
               ),
             ),
+<<<<<<< HEAD
           ),
         
         
         ],
       ),
+=======
+
+          ],
+        ),
+
+        const SizedBox(height: 25),
+
+        detailRow("Category", item["Category"]),
+        detailRow("Quantity", item["Quantity"].toString()),
+        detailRow("Price", "\$${item["Price"]}"),
+        detailRow(
+          "Low Stock Threshold",
+          item["Minimum Stock"].toString(),
+        ),
+        detailRow("Supplier", item["Supplier"]),
+
+      ],
+    ),
+  ),
+
+>>>>>>> 61a61e7c9dc0e8ae2e41810a1c31a52add0d7841
     );
   }
   class _ItemDetailScreenState extends State<ItemDetailScreen> {
