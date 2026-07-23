@@ -64,7 +64,7 @@ body: StreamBuilder<QuerySnapshot>(
                 elevation: 2,
                 child: GestureDetector(
                 onTap: (){
-                  Navigator.pushNamed(context, '/editscreen',
+                  Navigator.pushNamed(context, '/itemdetails',
                   arguments: item,);
                 },
 

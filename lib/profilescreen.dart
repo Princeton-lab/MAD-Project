@@ -102,10 +102,10 @@ body: Center(
        SizedBox(height: 20),
        IconButton(
           color: Colors.white,
-          tooltip: 'Open item details',
+          tooltip: 'Open stock screen',
           icon: const Icon(Icons.list_alt),
        onPressed: () {
-        Navigator.pushNamed(context, '/itemdetails');
+        Navigator.pushNamed(context, '/stockpage');
        },
       ),
       SizedBox(height: 20),

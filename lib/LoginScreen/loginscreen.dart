@@ -79,17 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         ])
         ),
-         SizedBox(height: 10),
 
-        Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-            "Forgot Password?",
-            style: TextStyle(color: Colors.deepPurple),
-          ),
-        ),
-
-        const SizedBox(height: 20),
+    SizedBox(height: 20),
 
      SizedBox(
   width: 200,
@@ -143,26 +134,6 @@ class _LoginScreenState extends State<LoginScreen> {
   ),
 ),
 
-        const SizedBox(height: 20),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Don't have an account? "),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/register');
-              },
-              child: Text(
-                "Register",
-                style: TextStyle(
-                  color: Colors.deepPurple,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
       ],
     ),
   ),
