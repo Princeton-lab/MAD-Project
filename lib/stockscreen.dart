@@ -122,6 +122,59 @@ body: StreamBuilder<QuerySnapshot>(
         },
         child: const Icon(Icons.add),
       ),
+            bottomNavigationBar: Container(
+    padding: const EdgeInsets.all(15),
+    color: const Color.fromARGB(255, 185, 176, 202),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+     children: [
+      IconButton(
+          color: Colors.red,
+          tooltip: 'Open home screen',
+          icon: const Icon(Icons.home),
+       onPressed: () {
+        Navigator.pushNamed(context, '/homepage');
+       },
+      ),
+       SizedBox(height: 20),
+       IconButton(
+          color: Colors.white,
+          tooltip: 'Open stock page',
+          icon: const Icon(Icons.list_alt),
+       onPressed: () {
+        Navigator.pushNamed(context, '/stockpage');
+       },
+      ),
+      SizedBox(height: 20),
+       IconButton(
+          color: Colors.white,
+          tooltip: 'Open alert screen',
+          icon: const Icon(Icons.notifications),
+       onPressed: () {
+        Navigator.pushNamed(context, '/alertpage');
+       },
+      ),
+      SizedBox(height: 20),
+       IconButton(
+          color: Colors.white,
+          tooltip: 'Open log screen',
+          icon: const Icon(Icons.history),
+       onPressed: () {
+        Navigator.pushNamed(context, '/logpage');
+       },
+      ),
+      SizedBox(height: 20),
+       IconButton(
+          color: Colors.white,
+          tooltip: 'Open profile screen',
+          icon: const Icon(Icons.person),
+       onPressed: () {
+        Navigator.pushNamed(context, '/profilepage');
+       },
+      ),
+     ],
+    ),
+      )
     );
   }
 }
