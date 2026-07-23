@@ -1,70 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// ---------------------------------------------------------------------------
-// Data model for one activity log entry
-// ---------------------------------------------------------------------------
+// model for one log entry
 class ActivityLogEntry {
-  final String userName;
-  final String action; // e.g. "Edited Logitech Keyboard"
+  final String userId; // whoever made this change
+  final String action;
   final DateTime timestamp;
-  final Color avatarColor;
 
   ActivityLogEntry({
-    required this.userName,
+    required this.userId,
     required this.action,
     required this.timestamp,
-    required this.avatarColor,
   });
 
-  // 1 - Factory constructor: builds an ActivityLogEntry from a Firestore
-  //     document. Firestore stores dates as its own "Timestamp" type, so
-  //     we convert it to a normal Dart DateTime with .toDate().
   factory ActivityLogEntry.fromFirestore(QueryDocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    final Timestamp ts = data['Timestamp'] ?? Timestamp.now();
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+    Timestamp ts = data['Timestamp'] ?? Timestamp.now();
+
     return ActivityLogEntry(
-      userName: data['User'] ?? 'Unknown',
+      userId: data['UserId'] ?? '',
       action: data['Action'] ?? '',
       timestamp: ts.toDate(),
-      avatarColor: _colorForUser(data['User'] ?? ''),
     );
   }
 
-  // 2 - Firestore doesn't store a color, so we generate a consistent one
-  //     per user by cycling through a small fixed palette. Same user
-  //     always gets the same color since it's based on their name.
-  static const List<Color> _palette = [
-    Color(0xFFD9A5E0),
-    Color(0xFFA8D8B9),
-    Color(0xFFF3A6A6),
-    Color(0xFFA6C8F3),
-    Color(0xFFF3D9A6),
-  ];
-
-  static Color _colorForUser(String userName) {
-    if (userName.isEmpty) return _palette[0];
-    final index = userName.hashCode % _palette.length;
-    return _palette[index.abs()];
-  }
-
-  // 3 - Formats the DateTime into something like "May 21, 2024 2:30 PM"
-  //     without needing the intl package - just plain Dart.
+  // turns the Firestore timestamp into something like "May 21, 2024 2:30 PM"
   String get formattedTimestamp {
-    const months = [
+    List<String> months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
-    final month = months[timestamp.month - 1];
-    final day = timestamp.day;
-    final year = timestamp.year;
+    String month = months[timestamp.month - 1];
+    int day = timestamp.day;
+    int year = timestamp.year;
 
     int hour = timestamp.hour % 12;
-    if (hour == 0) hour = 12;
-    final minute = timestamp.minute.toString().padLeft(2, '0');
-    final period = timestamp.hour >= 12 ? 'PM' : 'AM';
+    if (hour == 0) {
+      hour = 12;
+    }
 
-    return '$month $day, $year $hour:$minute $period';
+    String minute = timestamp.minute.toString().padLeft(2, '0');
+
+    String period = "AM";
+    if (timestamp.hour >= 12) {
+      period = "PM";
+    }
+
+    return month + " " + day.toString() + ", " + year.toString() + " " +
+        hour.toString() + ":" + minute + " " + period;
   }
 }
 
@@ -86,15 +70,16 @@ class _LogScreenState extends State<LogScreen> {
         foregroundColor: Colors.black,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: const Text(
           "Activity Log",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      // 4 - StreamBuilder listens LIVE to the "ActivityLog" collection,
-      //     ordered so the most recent activity shows up at the top.
+      // listens to ActivityLog live, newest first
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('ActivityLog')
@@ -109,7 +94,7 @@ class _LogScreenState extends State<LogScreen> {
             return Center(child: Text("Error: ${snapshot.error}"));
           }
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          if (snapshot.hasData == false || snapshot.data!.docs.isEmpty) {
             return const Center(
               child: Text(
                 "No activity yet.",
@@ -118,9 +103,10 @@ class _LogScreenState extends State<LogScreen> {
             );
           }
 
-          final List<ActivityLogEntry> activityLog = snapshot.data!.docs
-              .map((doc) => ActivityLogEntry.fromFirestore(doc))
-              .toList();
+          List<ActivityLogEntry> activityLog = [];
+          for (var doc in snapshot.data!.docs) {
+            activityLog.add(ActivityLogEntry.fromFirestore(doc));
+          }
 
           return ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -148,10 +134,10 @@ class _LogScreenState extends State<LogScreen> {
             ),
             IconButton(
               color: Colors.white,
-              tooltip: 'Open stock screen',
+              tooltip: 'Open item details',
               icon: const Icon(Icons.list_alt),
               onPressed: () {
-                Navigator.pushNamed(context, '/stockpage');
+                Navigator.pushNamed(context, '/itemdetails');
               },
             ),
             IconButton(
@@ -184,41 +170,102 @@ class _LogScreenState extends State<LogScreen> {
     );
   }
 
-  // One row: avatar on the left, name/action/timestamp text on the right.
+  // builds one row - avatar, role, action, timestamp
+  // each row has to check the DB for its own userId's role since
+  // different rows can belong to different people
   Widget _buildLogTile(ActivityLogEntry entry) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CircleAvatar(
-          radius: 18,
-          backgroundColor: entry.avatarColor,
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                entry.userName,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
+    return FutureBuilder<DocumentSnapshot>(
+      future: _getUserDocument(entry.userId),
+      builder: (context, userSnapshot) {
+        String roleDisplay = "Loading...";
+        Color roleColor = Colors.grey; // default while still loading
+
+        if (userSnapshot.connectionState == ConnectionState.done) {
+          if (userSnapshot.hasData == false) {
+            roleDisplay = "Unknown";
+            roleColor = Colors.grey;
+          } else if (userSnapshot.data!.exists == false) {
+            roleDisplay = "Unknown";
+            roleColor = Colors.grey;
+          } else {
+            Map<String, dynamic> userData =
+                userSnapshot.data!.data() as Map<String, dynamic>;
+
+            String role = userData['role'] ?? 'Unknown';
+
+            // capitalize first letter, eg staff -> Staff
+            if (role.isNotEmpty) {
+              String firstLetter = role[0].toUpperCase();
+              String restOfWord = role.substring(1);
+              roleDisplay = firstLetter + restOfWord;
+            } else {
+              roleDisplay = role;
+            }
+
+            // give each role its own fixed color, so admin and staff
+            // never end up looking the same by coincidence
+            roleColor = _colorForRole(role);
+          }
+        }
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: roleColor,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    roleDisplay,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    entry.action,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    entry.formattedTimestamp,
+                    style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                  ),
+                ],
               ),
-              const SizedBox(height: 2),
-              Text(
-                entry.action,
-                style: const TextStyle(fontSize: 14),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                entry.formattedTimestamp,
-                style: TextStyle(color: Colors.grey[500], fontSize: 12),
-              ),
-            ],
-          ),
-        ),
-      ],
+            ),
+          ],
+        );
+      },
     );
+  }
+
+  // gives admin and staff their own fixed colors, so they're always
+  // different, no matter what their uid happens to hash to
+  Color _colorForRole(String role) {
+    String roleLower = role.toLowerCase();
+
+    if (roleLower == "admin") {
+      return const Color(0xFFA8D8B9); // green
+    } else if (roleLower == "staff") {
+      return const Color(0xFFA6C8F3); // blue
+    } else {
+      return Colors.grey;
+    }
+  }
+
+  // grabs the user doc for a given uid from the users collection
+  Future<DocumentSnapshot> _getUserDocument(String userId) async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .get();
+    return userDoc;
   }
 }

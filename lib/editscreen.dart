@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class EditScreen extends StatefulWidget {
   const EditScreen({super.key});
@@ -165,12 +166,15 @@ class _EditScreenState extends State<EditScreen> {
                       'Quantity': quantity,
                     });
 
-                    // 1 - Log this action to the ActivityLog collection so
-                    //     it shows up on the Activity Log screen.
+                    // Log this action to the ActivityLog collection so
+                    //     it shows up on the Activity Log screen. We store
+                    //     the current logged-in user's UID (not a name),
+                    //     since that's what links back to the "users"
+                    //     collection to look up their role later.
                     await FirebaseFirestore.instance
                         .collection('ActivityLog')
                         .add({
-                      'User': 'John Doe', // placeholder until login is wired up
+                      'UserId': FirebaseAuth.instance.currentUser?.uid ?? '',
                       'Action': 'Edited ${nameController.text}',
                       'Timestamp': FieldValue.serverTimestamp(),
                     });
