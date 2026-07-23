@@ -157,14 +157,31 @@ const SizedBox(height: 20),
           ),
 
           SizedBox(height: 8),
+        StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+          .collection('Items')
+          .snapshots(),
+  builder: (context, snapshot) {
 
-          Text(
-            "TBA",//to be added
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+    if (!snapshot.hasData) {
+      return const Text("0");
+    }
+
+    final items = snapshot.data!.docs;
+    final lowStockItems = items.where((item) {
+      return item['Quantity'] <= item['Minimum Stock'];
+    }).toList();
+    
+    return Text(
+      lowStockItems.length.toString(),
+      style: const TextStyle(
+        fontSize: 30,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  },
+),
+
 
         ],
       ),
@@ -218,13 +235,33 @@ SizedBox(height: 20),
 
           SizedBox(height: 8),
 
-          Text(
-            "TBA",//to be added
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+          .collection('Items')
+          .snapshots(),
+  builder: (context, snapshot) {
+
+    if (!snapshot.hasData) {
+      return const Text("0");
+    }
+
+    final items = snapshot.data!.docs;
+    double totalValue = 0;
+
+    for (var item in items) {
+      totalValue +=
+          (item['Price'] as num).toDouble() *
+          (item['Quantity'] as num).toDouble();
+    }
+    return Text(
+      "\$${totalValue.toStringAsFixed(2)}",
+      style: const TextStyle(
+        fontSize: 30,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  },
+),
 
         ],
       ),
@@ -278,13 +315,27 @@ SizedBox(height: 20),
 
           SizedBox(height: 8),
 
-          Text(
-            "TBA",//to be added
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+          .collection('ActivityLog')
+          .snapshots(),
+  builder: (context, snapshot) {
+
+    if (!snapshot.hasData) {
+      return const Text("0");
+    }
+
+    final log = snapshot.data!.docs;
+
+    return Text(
+      log.length.toString(),
+      style: const TextStyle(
+        fontSize: 30,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  },
+),
 
         ],
       ),
@@ -306,8 +357,7 @@ SizedBox(height: 20),
       ),
   )],
   ),
-)
-
+  ),
       ],
     ),
   
@@ -331,10 +381,10 @@ SizedBox(height: 20),
        SizedBox(height: 20),
        IconButton(
           color: Colors.white,
-          tooltip: 'Open item details',
+          tooltip: 'Open stock screen',
           icon: const Icon(Icons.list_alt),
        onPressed: () {
-        Navigator.pushNamed(context, '/itemdetails');
+        Navigator.pushNamed(context, '/stockpage');
        },
       ),
       SizedBox(height: 20),

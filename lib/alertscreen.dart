@@ -162,10 +162,10 @@ class _AlertScreenState extends State<AlertScreen> {
             ),
             IconButton(
               color: Colors.white,
-              tooltip: 'Open item details',
+              tooltip: 'Open stock screen',
               icon: const Icon(Icons.list_alt),
               onPressed: () {
-                Navigator.pushNamed(context, '/itemdetails');
+                Navigator.pushNamed(context, '/stockpage');
               },
             ),
             IconButton(
