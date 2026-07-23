@@ -47,8 +47,7 @@ class ActivityLogEntry {
       period = "PM";
     }
 
-    return month + " " + day.toString() + ", " + year.toString() + " " +
-        hour.toString() + ":" + minute + " " + period;
+    return "$month $day, $year $hour:$minute $period";
   }
 }
 
@@ -134,10 +133,10 @@ class _LogScreenState extends State<LogScreen> {
             ),
             IconButton(
               color: Colors.white,
-              tooltip: 'Open stock screen',
+              tooltip: 'Open item details',
               icon: const Icon(Icons.list_alt),
               onPressed: () {
-                Navigator.pushNamed(context, '/stockpage');
+                Navigator.pushNamed(context, '/itemdetails');
               },
             ),
             IconButton(
